@@ -38,3 +38,21 @@ class TestRegressor(unittest.TestCase):
         self.assertEqual(res, {"item1": 0.0})
         self.assertEqual(res1, {"item1": 0.33})
         self.assertEqual(res2, {"item1": 0.67})
+
+    def test_predict_2(self):
+        reg = Regressor()
+        data = {
+            "item1": [
+                datetime(2016, 5, 2, 12, 0, 0),
+                datetime(2016, 5, 4, 19, 3, 0),
+                datetime(2016, 5, 6, 13, 0, 0),
+                datetime(2016, 5, 8, 12, 0, 0),
+                datetime(2016, 5, 10, 12, 0, 0),
+                datetime(2016, 5, 12, 12, 0, 0)
+            ]
+        }
+        reg.fit(data)
+        res = reg.predict()
+        res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
+        self.assertEqual(res, {"item1": 1.0})
+        self.assertEqual(res1, {"item1": 0.0})

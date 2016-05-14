@@ -2,7 +2,7 @@ def prepare_date(date):
     """
     Set hours, minutes and seconds of a datetime object to zero
     """
-    return date.replace(hour=0, minute=0, second=0)
+    return date.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def reduce_dates(dates_list):
