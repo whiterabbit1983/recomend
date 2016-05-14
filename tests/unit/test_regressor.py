@@ -1,5 +1,6 @@
 import unittest
 from datetime import datetime
+from dateutil.parser import parse
 from recommend import Regressor
 
 
@@ -49,6 +50,24 @@ class TestRegressor(unittest.TestCase):
                 datetime(2016, 5, 8, 12, 0, 0),
                 datetime(2016, 5, 10, 12, 0, 0),
                 datetime(2016, 5, 12, 12, 0, 0)
+            ]
+        }
+        reg.fit(data)
+        res = reg.predict()
+        res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
+        self.assertEqual(res, {"item1": 1.0})
+        self.assertEqual(res1, {"item1": 0.0})
+
+    def test_predict_3_unsorted(self):
+        reg = Regressor()
+        data = {
+            "item1": [
+                parse("2016-05-04T18:29:51.7340000Z"),
+                parse("2016-05-08T18:29:55.6010000Z"),
+                parse("2016-05-10T18:29:58.9250000Z"),
+                parse("2016-05-12T18:30:02.4870000Z"),
+                parse("2016-05-02T18:30:05.9970000Z"),
+                parse("2016-05-06T18:36:29.1080000Z")
             ]
         }
         reg.fit(data)

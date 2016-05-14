@@ -18,6 +18,7 @@ class SimplePredictor:
         current_date = prepare_date(current_date)
         res = {}
         for item, dates in self._data.items():
+            dates = sorted(dates)
             date_intervals = reduce_dates(dates)
             latest_date = max(dates)
             probs = calc_probs(date_intervals)

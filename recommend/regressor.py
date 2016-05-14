@@ -27,6 +27,7 @@ class Regressor:
                 continue
             lin_reg = LinearRegression()
 
+            dates = sorted(dates)
             date_deltas = reduce_dates(dates)
             target = np.array(date_deltas)
             features = np.array(list(range(len(target)))).reshape(len(date_deltas), 1)

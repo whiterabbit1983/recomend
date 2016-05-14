@@ -1,9 +1,15 @@
 import unittest
 from datetime import datetime
-from recommend.utils import reduce_dates, calc_probs
+from dateutil.parser import parse
+from recommend.utils import reduce_dates, calc_probs, prepare_date
 
 
 class TestUtils(unittest.TestCase):
+    def test_prepare_date(self):
+        d1 = parse("2016-05-04T18:29:51.7340000Z")
+        d2 = datetime(2016, 5, 4, 0, 0, 0, 0)
+        self.assertEqual(prepare_date(d1), d2)
+
     def test_reduce_dates_empty_list_or_has_one_item(self):
         res = reduce_dates([])
         res1 = reduce_dates([datetime(2015, 1, 13, 12, 0, 0)])
