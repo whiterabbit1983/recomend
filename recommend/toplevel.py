@@ -3,8 +3,7 @@ This module contains toplevel functions
 """
 
 
-from datetime import datetime
-from .regressor import Regressor
+from .regressor import Regressor, RFRegressor
 from .simple_predictor import SimplePredictor
 
 
@@ -16,6 +15,12 @@ def _handle_regressor(data, current_date):
 
 def _handle_simple_predictor(data, current_date):
     return SimplePredictor(data).predict(current_date=current_date)
+
+
+def _handle_random_forest(data, current_date):
+    reg = Regressor()
+    reg.fit(data)
+    return reg.predict(current_date=current_date)
 
 
 def predict(data, current_date=None, algo='regressor'):

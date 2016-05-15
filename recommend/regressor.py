@@ -3,15 +3,19 @@ This module contains simple linear Regressor implementation
 """
 import math
 import numpy as np
+from functools import partial
 from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from .utils import reduce_dates, prepare_date
 
 
 class Regressor:
+    reg_engine = LinearRegression
+
     def __init__(self):
         self._items = {}
-        self._lin_reg = LinearRegression()
+        self._lin_reg = self.reg_engine()
 
     def fit(self, data):
         """
@@ -25,7 +29,7 @@ class Regressor:
         for item, dates in data.items():
             if len(dates) < 3:
                 continue
-            lin_reg = LinearRegression()
+            lin_reg = self.reg_engine()
 
             dates = sorted(dates)
             date_deltas = reduce_dates(dates)
@@ -70,3 +74,7 @@ class Regressor:
                 res[item] = 0.0
 
         return res
+
+
+class RFRegressor(Regressor):
+    reg_engine = partial(RandomForestRegressor, random_state=42)

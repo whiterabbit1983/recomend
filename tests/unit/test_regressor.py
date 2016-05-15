@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime
 from dateutil.parser import parse
-from recommend import Regressor
+from recommend import Regressor, RFRegressor
 
 
 class TestRegressor(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestRegressor(unittest.TestCase):
             ]
         }
         reg.fit(data)
-        res = reg.predict()
+        res = reg.predict(current_date=datetime(2016, 5, 14, 12, 0, 0))
         res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
         self.assertEqual(res, {"item1": 1.0})
         self.assertEqual(res1, {"item1": 0.0})
@@ -71,7 +71,63 @@ class TestRegressor(unittest.TestCase):
             ]
         }
         reg.fit(data)
-        res = reg.predict()
+        res = reg.predict(current_date=datetime(2016, 5, 14, 12, 0, 0))
         res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
         self.assertEqual(res, {"item1": 1.0})
         self.assertEqual(res1, {"item1": 0.0})
+
+
+class TestRFRegressor(unittest.TestCase):
+    def test_predict_2(self):
+        reg = RFRegressor()
+        data = {
+            "item1": [
+                datetime(2016, 5, 2, 12, 0, 0),
+                datetime(2016, 5, 4, 19, 3, 0),
+                datetime(2016, 5, 6, 13, 0, 0),
+                datetime(2016, 5, 8, 12, 0, 0),
+                datetime(2016, 5, 10, 12, 0, 0),
+                datetime(2016, 5, 12, 12, 0, 0)
+            ]
+        }
+        reg.fit(data)
+        res = reg.predict(current_date=datetime(2016, 5, 14, 12, 0, 0))
+        res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
+        self.assertEqual(res, {"item1": 1.0})
+        self.assertEqual(res1, {"item1": 0.0})
+
+    def test_predict_3_unsorted(self):
+        reg = RFRegressor()
+        data = {
+            "item1": [
+                parse("2016-05-04T18:29:51.7340000Z"),
+                parse("2016-05-08T18:29:55.6010000Z"),
+                parse("2016-05-10T18:29:58.9250000Z"),
+                parse("2016-05-12T18:30:02.4870000Z"),
+                parse("2016-05-02T18:30:05.9970000Z"),
+                parse("2016-05-06T18:36:29.1080000Z")
+            ]
+        }
+        reg.fit(data)
+        res = reg.predict(current_date=datetime(2016, 5, 14, 12, 0, 0))
+        res1 = reg.predict(current_date=datetime(2016, 5, 13, 12, 0, 0))
+        self.assertEqual(res, {"item1": 1.0})
+        self.assertEqual(res1, {"item1": 0.0})
+
+    def test_predict_4_unsorted(self):
+        reg = RFRegressor()
+        data = {
+            "item1": [
+                parse("2016-05-04T18:29:51.7340000Z"),
+                parse("2016-05-08T18:29:55.6010000Z"),
+                parse("2016-05-10T18:29:58.9250000Z"),
+                parse("2016-05-12T18:30:02.4870000Z"),
+                parse("2016-05-02T18:30:05.9970000Z"),
+                parse("2016-05-06T18:36:29.1080000Z"),
+                parse("2016-05-19T18:36:29.1080000Z"),
+                parse("2016-05-26T18:36:29.1080000Z")
+            ]
+        }
+        reg.fit(data)
+        res = reg.predict(current_date=datetime(2016, 6, 2, 12, 0, 0))
+        self.assertEqual(res, {'item1': 0.5})
